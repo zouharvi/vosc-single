@@ -22,7 +22,9 @@ module.exports = (env, argv) => {
          path: path.resolve(__dirname, 'web')
       },
       devServer: {
-         contentBase: path.join(__dirname, 'web'),
+         static: {
+            directory: path.resolve(__dirname, 'web'),
+         },
          compress: true,
          port: 9000,
       },

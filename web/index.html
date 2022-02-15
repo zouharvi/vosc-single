@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset="UTF-8">
+    <title>VoSC</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel='stylesheet' type='text/css' href='style.css?v=0'>
+</head>
+
+<body>
+    <h2 style="width: 100%; text-align: center;">Verification of Scientific Claims - Single Document</h2>
+    <h4 style="width: 100%; text-align: center;">Prototype / work in progress, <a href="https://github.com/zouharvi/vosc-single">@zouharvi/vosc-single</a></h2>
+
+    <div id="main-wrapper" style="text-align: center; width: 100%; margin-top: 50px">
+        <div style="display: inline-block; width: 500px;" ;>
+            <canvas id="pdf-canvas"></canvas>
+        </div>
+
+        <div style="display: inline-block; vertical-align: top; margin-left: 50px" ;>
+            <div style="text-align: left"></div>
+            <div style=" margin-top: 100px; "></div>
+            <textarea name="textarea_statement" style="width: 400px; height: 100px; resize: none;">systems utilizing knowledge-bases usually consist of at least 4 components</textarea>
+            <input id="verify-button" type="button" value="Verify">
+            <div style=" margin-top: 100px; "></div>
+            <div style="text-align: left">Result:</div>
+            <textarea name="textarea_result" disabled style="width: 400px; height: 100px; resize: none;">Supported (3), Refuted (1), Relevant (6)</textarea>
+        </div>
+    </div>
+
+    <script src='vosc-single-web.js'></script>
+
+</body>
+
+</html>

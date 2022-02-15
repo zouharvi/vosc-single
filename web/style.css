@@ -1,0 +1,12 @@
+#pdf-canvas {
+    border-width: 1px; border-style: solid;
+}
+
+#verify-button {
+    display: block;
+    width: 150px;
+    height: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top:10px;
+}

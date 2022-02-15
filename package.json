@@ -1,12 +1,13 @@
 {
     "main": "webpack.config.js",
     "devDependencies": {
-        "@types/jquery": "^3.5.1",
-        "ts-loader": "^6.2.2",
-        "typescript": "^3.9.7",
-        "webpack": "^4.44.1",
-        "webpack-cli": "^3.3.12",
-        "webpack-dev-server": "^3.11.0"
+        "@types/jquery": "^3.5",
+        "pdfjs-dist": "^2.12",
+        "ts-loader": "^9",
+        "typescript": "^4.5",
+        "webpack": "^5.68",
+        "webpack-cli": "^4.9",
+        "webpack-dev-server": "^4.7"
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
