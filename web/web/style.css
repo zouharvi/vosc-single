@@ -1,8 +1,12 @@
-#pdf-canvas {
+* {
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+}
+
+#canvas_pdf {
     border-width: 1px; border-style: solid;
 }
 
-#verify-button {
+#button_verify, #button_load {
     display: block;
     width: 150px;
     height: 40px;

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from flask import Flask, request
+from flask_cors import CORS
 from pdf_utils import parse_pdf
 import json
 import requests
@@ -8,6 +9,7 @@ import os
 import hashlib
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/parse_pdf/')
 def route_parse_pdf():
@@ -29,4 +31,4 @@ def route_parse_pdf():
     return json.dumps(data)
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=9000)
+    app.run(host='0.0.0.0', port=9001)
