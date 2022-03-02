@@ -6,11 +6,12 @@ if (!PDFJS.GlobalWorkerOptions.workerSrc) {
     PDFJS.GlobalWorkerOptions.workerSrc = WORKER_URL;
 }
 
-let PDF_DISPLAY_RATIO: number | null = null
-let PDF_HEIGHT: number | null = null
+let PDF_DISPLAY_RATIO: number
+let PDF_HEIGHT: number
 let PDF_PAGENUMBER = 5
+let PDF_VECS: [number[], any, any][][]
 
-function load_pdf() {
+async function load_pdf() {
     // async download of PDF
     let loadingTask = PDFJS.getDocument($("#textarea_url").val());
     loadingTask.promise.then(function (pdf: any) {
@@ -46,31 +47,59 @@ function load_pdf() {
         // PDF loading error
         console.error(reason);
     });
+
+    // server load
+    let data = await $.ajax({
+        url: "http://localhost:9001/parse_pdf/",
+        data: { pdfurl: $("#textarea_url").val() },
+        dataType: "json",
+    });
+    PDF_VECS = data
 }
 
-function is_relevant(textA: string, textB: string) {
+function is_relevant_subset(textA: string, textB: string) {
     let textAset = (textA.toLowerCase().split(/\s/).map((x) => x.replace(/\W/g, "")))
     let textBset = (textB.toLowerCase().split(/\s/).map((x) => x.replace(/\W/g, "")))
 
     return textBset.every(val => textAset.includes(val))
 }
 
+function is_relevant_vec(vecs: number[][], textB: number[]) {
+    // TODO
+    return true
+}
+
 async function verify_prompt() {
     let prompt = ($("#textarea_prompt").val() as string).toLowerCase()
     let data = await $.ajax({
-        url: "http://localhost:9001/parse_pdf/",
-        data: { pdfurl: $("#textarea_url").val() },
+        url: "http://localhost:9001/encode_prompt/",
+        data: { text: prompt },
         dataType: "json",
     });
-    let pagedata = data[PDF_PAGENUMBER - 1]
-    for (let i = 0; i < pagedata.length; i++) {
-        // normalize and remove nonalpha characters
-        let text = pagedata[i][0]
-        if (is_relevant(text, prompt)) {
-            draw_highlight(pagedata[i][1])
-            console.log(text, pagedata[i][1])
+    // currently the return is [encode(prompt)]
+    let prompt_vec = data[0]
+
+    let min_d = global.Infinity
+    let min_i = -1
+    for (let i = 0; i < PDF_VECS[PDF_PAGENUMBER-1].length; i++) {
+        let dist = l2_distance(PDF_VECS[PDF_PAGENUMBER-1][i][0], prompt_vec)
+        console.log(dist, i)
+        if (dist < min_d) {
+            min_d = dist
+            min_i = i
         }
     }
+    console.log(min_d, min_i)
+    draw_highlight(PDF_VECS[PDF_PAGENUMBER-1][min_i][1])
+}
+
+function l2_distance(vecA: number[], vecB: number[]) : number {
+    let total_sum = 0.0
+    for(let i = 0; i < vecA.length && i < vecB.length; i++) {
+        total_sum += Math.pow(vecA[i]-vecB[i], 2)
+    }
+    // sqrt can be skipped because we're doing only comparison anyway
+    return Math.sqrt(total_sum)
 }
 
 function draw_highlight(bbox: Array<number>) {
