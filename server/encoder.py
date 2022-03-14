@@ -2,7 +2,15 @@ from transformers import AutoTokenizer, AutoModel
 import torch
 
 MODEL = None
-DEVICE = "cuda:0"
+
+def get_device():
+    import torch
+    if torch.cuda.is_available():
+        return torch.device("cuda:0")
+    else:
+        return torch.device("cpu")
+
+DEVICE = get_device()
 
 def mean_pooling(model_output, attention_mask, layer_i=0):
     # Mean Pooling - Take attention mask into account for correct averaging

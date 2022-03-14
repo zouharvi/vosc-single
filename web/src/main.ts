@@ -13,6 +13,7 @@ let PDF_VECS: [number[], any, any][][]
 
 async function load_pdf() {
     // async download of PDF
+    console.log($("#textarea_url").val())
     let loadingTask = PDFJS.getDocument($("#textarea_url").val());
     loadingTask.promise.then(function (pdf: any) {
         console.log('PDF loaded');
@@ -82,7 +83,10 @@ async function verify_prompt() {
     let min_d = global.Infinity
     let min_i = -1
     for (let i = 0; i < PDF_VECS[PDF_PAGENUMBER-1].length; i++) {
-        let dist = l2_distance(PDF_VECS[PDF_PAGENUMBER-1][i][0], prompt_vec)
+        let dist = l2_distance(
+            vector_norm(PDF_VECS[PDF_PAGENUMBER-1][i][0]),
+            vector_norm(prompt_vec)
+        )
         console.log(dist, i)
         if (dist < min_d) {
             min_d = dist
@@ -93,13 +97,31 @@ async function verify_prompt() {
     draw_highlight(PDF_VECS[PDF_PAGENUMBER-1][min_i][1])
 }
 
+function vector_norm(vec: number[]) {
+    let sum_square = vec.map((x) => x*x).reduce((prev: number, current: number) => prev + current, 0)
+    let length = Math.sqrt(sum_square)
+    
+    return vec.map((x) => x/length)
+}
+
 function l2_distance(vecA: number[], vecB: number[]) : number {
     let total_sum = 0.0
+    // TODO: change to reduce
     for(let i = 0; i < vecA.length && i < vecB.length; i++) {
         total_sum += Math.pow(vecA[i]-vecB[i], 2)
     }
     // sqrt can be skipped because we're doing only comparison anyway
     return Math.sqrt(total_sum)
+}
+
+function cos_distance(vecA: number[], vecB: number[]) : number {
+    let total_sum = 0.0
+    // TODO: change to reduce
+    for(let i = 0; i < vecA.length && i < vecB.length; i++) {
+        total_sum += vecA[i]*vecB[i]
+    }
+    // invert so that it can be used in place of l2 and we try to minimize
+    return -total_sum
 }
 
 function draw_highlight(bbox: Array<number>) {
