@@ -82,9 +82,9 @@ async function verify_prompt() {
 
     let min_d = global.Infinity
     let min_i = -1
-    for (let i = 0; i < PDF_VECS[PDF_PAGENUMBER-1].length; i++) {
+    for (let i = 0; i < PDF_VECS[PDF_PAGENUMBER - 1].length; i++) {
         let dist = l2_distance(
-            vector_norm(PDF_VECS[PDF_PAGENUMBER-1][i][0]),
+            vector_norm(PDF_VECS[PDF_PAGENUMBER - 1][i][0]),
             vector_norm(prompt_vec)
         )
         console.log(dist, i)
@@ -94,31 +94,31 @@ async function verify_prompt() {
         }
     }
     console.log(min_d, min_i)
-    draw_highlight(PDF_VECS[PDF_PAGENUMBER-1][min_i][1])
+    draw_highlight(PDF_VECS[PDF_PAGENUMBER - 1][min_i][1])
 }
 
 function vector_norm(vec: number[]) {
-    let sum_square = vec.map((x) => x*x).reduce((prev: number, current: number) => prev + current, 0)
+    let sum_square = vec.map((x) => x * x).reduce((prev: number, current: number) => prev + current, 0)
     let length = Math.sqrt(sum_square)
-    
-    return vec.map((x) => x/length)
+
+    return vec.map((x) => x / length)
 }
 
-function l2_distance(vecA: number[], vecB: number[]) : number {
+function l2_distance(vecA: number[], vecB: number[]): number {
     let total_sum = 0.0
     // TODO: change to reduce
-    for(let i = 0; i < vecA.length && i < vecB.length; i++) {
-        total_sum += Math.pow(vecA[i]-vecB[i], 2)
+    for (let i = 0; i < vecA.length && i < vecB.length; i++) {
+        total_sum += Math.pow(vecA[i] - vecB[i], 2)
     }
     // sqrt can be skipped because we're doing only comparison anyway
     return Math.sqrt(total_sum)
 }
 
-function cos_distance(vecA: number[], vecB: number[]) : number {
+function cos_distance(vecA: number[], vecB: number[]): number {
     let total_sum = 0.0
     // TODO: change to reduce
-    for(let i = 0; i < vecA.length && i < vecB.length; i++) {
-        total_sum += vecA[i]*vecB[i]
+    for (let i = 0; i < vecA.length && i < vecB.length; i++) {
+        total_sum += vecA[i] * vecB[i]
     }
     // invert so that it can be used in place of l2 and we try to minimize
     return -total_sum
